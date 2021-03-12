@@ -1,0 +1,14 @@
+[app]
+
+# timeout in  minutes
+timeout = 720
+database_uri = "mysql+pymysql://lw:lw@192.168.0.4/stock"
+sleep = 120
+
+[hyper_sage]
+uri = "https://api.hypersage.co.uk:26012"
+api_key = "gfqrwsiteg38japz7x"
+timeout = 45
+
+[adjustments]
+adjustments_uri = "/api/stock"
