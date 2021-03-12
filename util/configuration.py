@@ -32,7 +32,4 @@ hyper_timeout = config["hyper_sage"]["timeout"]
 
 adjustments_uri = config["adjustments"]["adjustments_uri"]
 sleep = config["app"]["sleep"]
-
-database_uri = config["app"]["database_uri"]
-if os.environ.get("RUNTIME") != "docker":
-    database_uri = "mysql+pymysql://lw:lw@localhost/stock"
+database_uri = os.environ.get("DATABASE_URL")
