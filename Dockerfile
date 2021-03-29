@@ -7,6 +7,7 @@ ENV DATABASE_URL=${DATABASE_URL}
 ENV PYTHONPATH "${PYTHONPATH}:/lw/lewisandwood"
 
 ENV OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+ENV RUNTIME=docker
 
 RUN pip --trusted-host pypi.python.org --trusted-host pypi.org --trusted-host files.pythonhosted.org install -r requirements.txt
 
