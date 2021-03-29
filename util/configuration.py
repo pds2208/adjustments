@@ -34,8 +34,8 @@ adjustments_uri = config["adjustments"]["adjustments_uri"]
 sleep = config["app"]["sleep"]
 
 database_uri = config["app"]["database_uri"]
-if os.environ.get("RUNTIME") != "docker":
-    database_uri = "mysql+pymysql://lw:lw@localhost/stock"
+# if os.environ.get("RUNTIME") != "docker":
+    # database_uri = "mysql+pymysql://lw:lw@localhost/stock"
 
 maximum_errors = config["email"]["maximum_errors"]
 sender_email = config["email"]["sender_email"]
