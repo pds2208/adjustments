@@ -1,7 +1,7 @@
 [app]
 
 timeout = 720
-database_uri = "mysql+pymysql://lw:lw@localhost/stock"
+database_uri = "mysql+pymysql://lw:lw@lw-db/stock"
 sleep = 120
 
 [hyper_sage]
