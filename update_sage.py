@@ -10,6 +10,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 from persistence.models import AdjustmentType, Adjustments, SageStats
+from stock import get_sage_stock
 from util.configuration import database_uri, sleep
 from util.configuration import hyper_uri, adjustments_uri, hyper_api_key, hyper_timeout
 from util.logging import log
@@ -54,11 +55,12 @@ def get_all_adjustments(session: Session) -> list[Adjustments]:
     return session.query(Adjustments).all()
 
 
-def update_sage_stock(*, adj_type: int, quantity: Decimal, stock_code: str, reference: str) -> Optional[str]:
+def update_sage_stock(*, adj_type: int, quantity: Decimal, stock_code: str, reference: str, cost: float) -> Optional[str]:
     now = datetime.today()
     payload = {
         "stockCode": stock_code,
         "quantity": float(quantity),
+        "costPrice": cost,
         "type": adj_type,
         "date": now.strftime("%d/%m/%Y"),
         "reference": "Winegum Stock Adjustment",
@@ -122,11 +124,18 @@ def update_sage():
 
         log.info(f"Processing adjustment: {adj.stock_code}")
 
+        try:
+            cost = get_sage_stock(adj.stock_code)
+            log.info(f"Cost price for {adj.stock_code} is {cost}")
+        except Exception as e:
+            return
+
         result = update_sage_stock(
             adj_type=1 if adj.adjustment_type.name == AdjustmentType.adj_in.name else 2,
             quantity=adj.amount,
             stock_code=adj.stock_code,
             reference=adj.reference_text,
+            cost=cost
         )
 
         if result is None:

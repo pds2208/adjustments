@@ -12,3 +12,20 @@ timeout = 45
 
 [adjustments]
 adjustments_uri = "/api/stock"
+
+[email]
+maximum_errors = 3
+sender_email = "info@lewisandwood.co.uk"
+receiver_email = "paul.soule@gmail.com"
+subject = "StockSys Alert"
+postmarker_token = "f8049f6f-dec7-49b0-bf1f-cc10119cd916"
+
+[sage]
+host = "192.168.0.39"
+port = 5495
+stock_levels = "?select=reference,name,inStock,allocated,freestock,onOrder,salesPrice&format=json&where=reference in "
+stock_uri = "/sdata/accounts50/GCRM/%7B158156F0-396C-4FA9-AD17-F4A27F82A47D%7D/commodities"
+password = ""
+user = "StockApp"
+#sage timeout
+timeout = 20
