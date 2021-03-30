@@ -1,12 +1,12 @@
 [app]
 
 timeout = 720
-database_uri = "mysql+pymysql://lw:lw@192.168.0.4/stock"
+database_uri = "mysql+pymysql://lw:lw@lw-db/stock"
 sleep = 120
 
 [hyper_sage]
-uri = "https://api.hypersage.co.uk:26012"
-api_key = "gfqrwsiteg38japz7x"
+uri = "https://hyperdrive.hyperext.com:27020"
+api_key = "XFp35NVsVPjxPWkXYP6LzmYd"
 timeout = 45
 
 [adjustments]
