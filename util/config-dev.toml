@@ -2,7 +2,7 @@
 
 timeout = 720
 database_uri = "mysql+pymysql://lw:lw@lw-db/stock"
-sleep = 120
+sleep = 90
 
 [hyper_sage]
 uri = "https://hyperdrive.hyperext.com:27013"
