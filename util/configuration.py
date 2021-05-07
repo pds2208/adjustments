@@ -1,4 +1,5 @@
 import os
+import sys
 
 import toml
 
@@ -22,6 +23,8 @@ class ApplicationConfiguration:
         elif runtime == "production":
             log.info("Lewis & Wood Adjustments - Starting up - Production")
             cls.config = toml.load(os.path.join(os.path.dirname(__file__), "config-prod.toml"))
+        if cls is None:
+            sys.exit("RUNTIME environment variable not set")
         return cls.config
 
 
