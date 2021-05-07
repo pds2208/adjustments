@@ -12,10 +12,14 @@ class ApplicationConfiguration:
     def init(cls):
         if cls.config is not None:
             return cls.config
-        if os.environ.get("RUNTIME") == "development":
+        runtime = os.environ.get("RUNTIME")
+        if runtime == "development":
             log.info("Lewis & Wood Adjustments - Starting up - Development")
             cls.config = toml.load(os.path.join(os.path.dirname(__file__), "config-dev.toml"))
-        else:
+        elif runtime == "testing":
+            log.info("Lewis & Wood Adjustments - Starting up - Testing")
+            cls.config = toml.load(os.path.join(os.path.dirname(__file__), "config-test.toml"))
+        elif runtime == "production":
             log.info("Lewis & Wood Adjustments - Starting up - Production")
             cls.config = toml.load(os.path.join(os.path.dirname(__file__), "config-prod.toml"))
         return cls.config
