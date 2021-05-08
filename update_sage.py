@@ -55,12 +55,11 @@ def get_all_adjustments(session: Session) -> list[Adjustments]:
     return session.query(Adjustments).all()
 
 
-def update_sage_stock(*, adj_type: int, quantity: Decimal, stock_code: str, reference: str, cost: float) -> Optional[str]:
+def update_sage_stock(*, adj_type: int, quantity: Decimal, stock_code: str, reference: str) -> Optional[str]:
     now = datetime.today()
     payload = {
         "stockCode": stock_code,
         "quantity": float(quantity),
-        "costPrice": cost,
         "type": adj_type,
         "date": now.strftime("%d/%m/%Y"),
         "reference": "Winegum Stock Adjustment",
