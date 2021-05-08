@@ -1,7 +1,7 @@
 [app]
 
 timeout = 720
-database_uri = "mysql+pymysql://lw:lw@lw-db/stock"
+database_uri = "mysql+pymysql://lw:lw@localhost/stock"
 sleep = 90
 
 [hyper_sage]
@@ -28,3 +28,5 @@ password = ""
 user = "Helen"
 #sage timeout
 timeout = 20
+get_cost_price = false
+

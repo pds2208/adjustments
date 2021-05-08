@@ -13,18 +13,21 @@ class ApplicationConfiguration:
     def init(cls):
         if cls.config is not None:
             return cls.config
+
         runtime = os.environ.get("RUNTIME")
+
         if runtime == "development":
             log.info("Lewis & Wood Adjustments - Starting up - Development")
-            cls.config = toml.load(os.path.join(os.path.dirname(__file__), "config-dev.toml"))
+            cls.config = toml.load(os.path.join(os.path.dirname(__file__), "config-development.toml"))
         elif runtime == "testing":
             log.info("Lewis & Wood Adjustments - Starting up - Testing")
-            cls.config = toml.load(os.path.join(os.path.dirname(__file__), "config-test.toml"))
+            cls.config = toml.load(os.path.join(os.path.dirname(__file__), "config-testing.toml"))
         elif runtime == "production":
             log.info("Lewis & Wood Adjustments - Starting up - Production")
-            cls.config = toml.load(os.path.join(os.path.dirname(__file__), "config-prod.toml"))
-        if cls is None:
-            sys.exit("RUNTIME environment variable not set")
+            cls.config = toml.load(os.path.join(os.path.dirname(__file__), "config-production.toml"))
+        else:
+            sys.exit("RUNTIME environment variable is not set. Set it to development | testing | production")
+
         return cls.config
 
 
@@ -41,8 +44,6 @@ adjustments_uri = config["adjustments"]["adjustments_uri"]
 sleep = config["app"]["sleep"]
 
 database_uri = config["app"]["database_uri"]
-# if os.environ.get("RUNTIME") != "docker":
-    # database_uri = "mysql+pymysql://lw:lw@localhost/stock"
 
 maximum_errors = config["email"]["maximum_errors"]
 sender_email = config["email"]["sender_email"]
@@ -57,3 +58,4 @@ sage_stock_levels = config["sage"]["stock_levels"]
 sage_timeout = config["sage"]["timeout"]
 sage_user = config["sage"]["user"]
 sage_password = config["sage"]["password"]
+get_cost_price = config["sage"]["get_cost_price"]

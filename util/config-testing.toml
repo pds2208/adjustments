@@ -5,8 +5,8 @@ database_uri = "mysql+pymysql://lw:lw@lw-db/stock"
 sleep = 90
 
 [hyper_sage]
-uri = "https://hyperdrive.hyperext.com:27020"
-api_key = "XFp35NVsVPjxPWkXYP6LzmYd"
+uri = "https://hyperdrive.hyperext.com:27013"
+api_key = "hwytrwqvf262vsz9"
 timeout = 45
 
 [adjustments]
@@ -20,11 +20,12 @@ subject = "StockSys Alert"
 postmarker_token = "f8049f6f-dec7-49b0-bf1f-cc10119cd916"
 
 [sage]
-host = "192.168.0.39"
+host = "192.168.0.80"
 port = 5495
 stock_levels = "?select=reference,name,inStock,allocated,freestock,onOrder,salesPrice&format=json&where=reference in "
 stock_uri = "/sdata/accounts50/GCRM/%7B158156F0-396C-4FA9-AD17-F4A27F82A47D%7D/commodities"
 password = ""
-user = "StockApp"
+user = "Helen"
 #sage timeout
 timeout = 20
+get_cost_price = false

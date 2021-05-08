@@ -25,7 +25,7 @@ def send_email(stock_code, error: str):
             <br>
                While updating the following product: {stock_code}, {max_errors} consecutive errors have occured<br>
                <br>
-               The last error we received from Sage was:<br><br>
+               The last error received from Sage was:<br><br>
                 <i>{error}</i>
             </p>
           </body>

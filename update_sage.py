@@ -1,110 +1,14 @@
 import time
-from contextlib import contextmanager
 from datetime import datetime
-from decimal import Decimal
-from typing import Optional
 
-import requests
-from requests.exceptions import ConnectTimeout
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
-
-from persistence.models import AdjustmentType, Adjustments, SageStats
-from stock import get_sage_stock
-from util.configuration import database_uri, sleep
-from util.configuration import hyper_uri, adjustments_uri, hyper_api_key, hyper_timeout
+from persistence import session_scope
+from persistence.adjustments import get_sage_stats, get_sage_adjustment
+from persistence.models import AdjustmentType
+from sage import SageException
+from sage.cost_price import get_sage_cost_price
+from sage.sage_stock import update_sage_stock
+from util.configuration import sleep, get_cost_price
 from util.logging import log
-
-uri = database_uri
-engine = create_engine(uri)
-conn = engine.connect()
-
-
-@contextmanager
-def session_scope():
-    """Provide a transactional scope around a series of operations."""
-    session = Session(engine)
-    try:
-        yield session
-        session.commit()
-    except:
-        session.rollback()
-        raise
-    finally:
-        session.close()
-
-
-def get_sage_adjustments(session: Session) -> list[Adjustments]:
-    return session.query(Adjustments).filter(Adjustments.sage_updated == 0).all()
-
-
-def get_sage_adjustment(session: Session) -> Optional[Adjustments]:
-    return session.query(Adjustments).filter(Adjustments.sage_updated == 0).first()
-
-
-def get_sage_stats(session: Session) -> SageStats:
-    a = session.query(SageStats).one()
-    return a
-
-
-def update_sage_stats(session: Session, stats: SageStats) -> None:
-    session.add(stats)
-
-
-def get_all_adjustments(session: Session) -> list[Adjustments]:
-    return session.query(Adjustments).all()
-
-
-def update_sage_stock(*, adj_type: int, quantity: Decimal, stock_code: str, reference: str) -> Optional[str]:
-    now = datetime.today()
-    payload = {
-        "stockCode": stock_code,
-        "quantity": float(quantity),
-        "type": adj_type,
-        "date": now.strftime("%d/%m/%Y"),
-        "reference": "Winegum Stock Adjustment",
-        "details": reference.strip()
-    }
-
-    endpoint = f"{hyper_uri}{adjustments_uri}"
-    log.info(f"Calling HyperSage endpoint: {endpoint}")
-
-    try:
-        r = requests.post(
-            endpoint,
-            headers={"AuthToken": hyper_api_key},
-            timeout=hyper_timeout,
-            json=payload
-        )
-    except ConnectTimeout:
-        log.error("Connection timeout connecting to HyperSage")
-        return "Timed out connecting to HyperSage"
-    except TimeoutError:
-        log.error("Connection timeout connecting to HyperSage")
-        return "Timed out communicating with HyperSage"
-    except Exception as e:
-        log.error(f"Error communicating with HyperSage: {e}")
-        return f"Error communicating with HyperSage: {e}"
-
-    if r.status_code != 200:
-        if adj_type == AdjustmentType.adj_out:
-            err = f"Cannot add an adjustment out to Sage, error status is {r.status_code}"
-            log.error(err)
-            raise Exception(err + ". The product quantity on Sage may be incorrect")
-        err = f"Cannot add an adjustment in to Sage, error status is {r.status_code}"
-        log.error(err)
-        raise Exception(err)
-
-    i = r.json()
-
-    if i["success"] is False:
-        code = i["code"]
-        message = i["message"]
-        return f"error {code} from HyperSage, message: {message}"
-
-    typ = "In" if adj_type == 1 else "Out"
-    log.info(f"Added adjustment: Stock Code: {stock_code}, Type: {typ}, Quantity: {float(quantity)}")
-    return None
 
 
 def update_sage():
@@ -123,18 +27,24 @@ def update_sage():
 
         log.info(f"Processing adjustment: {adj.stock_code}")
 
-        # try:
-        #     cost = get_sage_stock(adj.stock_code)
-        #     log.info(f"Cost price for {adj.stock_code} is {cost}")
-        # except Exception as e:
-        #     return
+        if get_cost_price is True:
+            try:
+                cost = get_sage_cost_price(adj.stock_code)
+                if cost is None:
+                    log.info(f"Cost price for {adj.stock_code} not found - does the product exist?")
+                else:
+                    log.info(f"Cost price for {adj.stock_code} is {cost}")
+            except SageException:
+                return
+        else:
+            cost = None
 
         result = update_sage_stock(
             adj_type=1 if adj.adjustment_type.name == AdjustmentType.adj_in.name else 2,
             quantity=adj.amount,
             stock_code=adj.stock_code,
             reference=adj.reference_text,
-            # cost=cost
+            cost=cost
         )
 
         if result is None:
@@ -144,12 +54,13 @@ def update_sage():
             sage_stats.total_updated = sage_stats.total_updated + 1
             session.add(sage_stats)
             log.info(f"Updated Sage record for product {adj.stock_code}")
-        else:
-            adj.num_retries = adj.num_retries + 1
-            sage_stats.total_failures = sage_stats.total_failures + 1
-            session.add(adj)
-            session.add(sage_stats)
-            log.warn(f"Update Sage record for product {adj.stock_code} FAILED, {result}")
+            return
+
+        adj.num_retries = adj.num_retries + 1
+        sage_stats.total_failures = sage_stats.total_failures + 1
+        session.add(adj)
+        session.add(sage_stats)
+        log.warning(f"Update Sage record for product {adj.stock_code} FAILED, {result}")
 
 
 if __name__ == "__main__":
