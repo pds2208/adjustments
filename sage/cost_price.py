@@ -1,5 +1,5 @@
 import urllib.parse
-from typing import Union
+from typing import Union, Optional
 
 import requests
 from requests.exceptions import ConnectTimeout
@@ -15,7 +15,7 @@ from util.configuration import (
 from util.logging import log
 
 
-def _call_sage(endpoint, payload):
+def _call_sage(endpoint: str, payload: dict) -> Optional[float]:
     log.debug("Calling sage")
     try:
         r = requests.get(
@@ -46,7 +46,7 @@ def _call_sage(endpoint, payload):
     return j["$resources"][0]["cost"]
 
 
-def get_sage_stock(stock_code: str) -> float:
+def get_sage_stock(stock_code: str) -> Optional[float]:
     payload = {"select": "cost", "format": "json", "where": f"reference eq '{stock_code}'"}
     pl: str = urllib.parse.quote(payload["where"])
     payload["where"] = pl
@@ -55,7 +55,7 @@ def get_sage_stock(stock_code: str) -> float:
     return _call_sage(endpoint, payload)
 
 
-def get_sage_cost_price(stock_code: str) -> Union[float, None]:
+def get_sage_cost_price(stock_code: str) -> Optional[float]:
     try:
         res = get_sage_stock(stock_code)
     except Exception as err:
