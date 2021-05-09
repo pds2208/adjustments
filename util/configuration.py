@@ -51,8 +51,6 @@ receiver_email = config["email"]["receiver_email"]
 subject = config["email"]["subject"]
 postmarker_token= config["email"]["postmarker_token"]
 
-sage_host = config["sage"]["host"]
-sage_port = config["sage"]["port"]
 sage_stock_uri = config["sage"]["stock_uri"]
 sage_stock_levels = config["sage"]["stock_levels"]
 sage_timeout = config["sage"]["timeout"]

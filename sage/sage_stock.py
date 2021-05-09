@@ -3,11 +3,20 @@ from decimal import Decimal
 from typing import Optional
 
 import requests
+from pydantic import BaseModel, ValidationError
 from requests.exceptions import ConnectTimeout
 
 from persistence.models import AdjustmentType
+from sage import SageException
 from util.configuration import hyper_uri, adjustments_uri, hyper_api_key, hyper_timeout
 from util.logging import log
+
+
+class HypersageResponse(BaseModel):
+    success: bool
+    code: int
+    response: bool
+    message: Optional[str]
 
 
 def update_sage_stock(
@@ -55,17 +64,25 @@ def update_sage_stock(
         if adj_type == AdjustmentType.adj_out:
             err = f"Cannot add an adjustment out to Sage, error status is {r.status_code}"
             log.error(err)
-            raise Exception(err + ". The product quantity on Sage may be incorrect")
+            raise SageException(err + ". The product quantity on Sage may be incorrect")
         err = f"Cannot add an adjustment in to Sage, error status is {r.status_code}"
         log.error(err)
-        raise Exception(err)
+        raise SageException(err)
 
-    i = r.json()
+    try:
+        i = r.json()
+    except Exception as e:
+        log.error(f"HyperSage did not return a valid json response: {e}")
+        raise SageException(f"HyperSage did not return a valid json response: {e}")
 
-    if i["success"] is False:
-        code = i["code"]
-        message = i["message"]
-        return f"error {code} from HyperSage, message: {message}"
+    try:
+        response = HypersageResponse(**i)
+    except ValidationError as e:
+        log.error(f"Validation of Sage response failed: {e}")
+        raise SageException(f"Validation of Sage response failed: {e}")
+
+    if response.success is False:
+        return f"error {response.code} from HyperSage, message: {response.message}"
 
     typ = "In" if adj_type == 1 else "Out"
     log.info(f"Added adjustment: Stock Code: {stock_code}, Type: {typ}, Quantity: {float(quantity)}")
