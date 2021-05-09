@@ -75,11 +75,10 @@ def _call_sage(endpoint: str, payload: dict) -> Optional[float]:
 def get_sage_cost_price(stock_code: str) -> Optional[float]:
     try:
         payload = {"select": "cost", "format": "json", "where": f"reference eq '{stock_code}'"}
-        pl: str = urllib.parse.quote(payload["where"])
-        payload["where"] = pl
+        payload["where"] = urllib.parse.quote(payload["where"])
         res = _call_sage(sage_stock_uri, payload)
     except Exception as err:
-        log.error(f"Exception retrieving Sage stock {err}")
+        log.error(f"Exception retrieving Sage stock ", exc_info=1)
         raise err
 
     return res
