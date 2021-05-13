@@ -1,7 +1,4 @@
-import smtplib
-import ssl
 from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 
 from postmarker.core import PostmarkClient
 
@@ -36,11 +33,11 @@ def send_email(stock_code, error: str):
     postmark = PostmarkClient(server_token=config.postmarker_token)
 
     postmark.emails.send(
-        From=sender_email,
-        To=receiver_email,
-        Subject=config.subject,
-        HtmlBody=html
-    )
+            From=sender_email,
+            To=receiver_email,
+            Subject=config.subject,
+            HtmlBody=html
+            )
 
 
 if __name__ == "__main__":
