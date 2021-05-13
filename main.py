@@ -9,7 +9,7 @@ from sage import SageException
 from sage.cost_price import get_sage_cost_price
 from sage.sage_stock import update_sage_stock
 from send_email import send_email
-from util.configuration import get_cost_price, maximum_errors, sleep
+from util.configuration import get_cost_price, maximum_errors
 from util.logging import log
 
 
@@ -52,13 +52,16 @@ def update_sage() -> Result:
         else:
             cost = None
 
-        result: Optional[str] = update_sage_stock(
-                adj_type=1 if adj.adjustment_type.name == AdjustmentType.adj_in.name else 2,
-                quantity=adj.amount,
-                stock_code=adj.stock_code,
-                reference=adj.reference_text,
-                cost=cost
-                )
+        try:
+            result: Optional[str] = update_sage_stock(
+                    adj_type=1 if adj.adjustment_type.name == AdjustmentType.adj_in.name else 2,
+                    quantity=adj.amount,
+                    stock_code=adj.stock_code,
+                    reference=adj.reference_text,
+                    cost=cost
+                    )
+        except Exception as e:
+            result = str(e)
 
         if result is None:
             adj.sage_updated = True
@@ -79,7 +82,7 @@ def update_sage() -> Result:
 
 if __name__ == "__main__":
     num_errors = 0
-    send_email_on_error = False
+    send_email_on_error = True
 
     while True:
         result: Result = update_sage()
@@ -87,7 +90,7 @@ if __name__ == "__main__":
             num_errors = num_errors + 1
             if num_errors > maximum_errors and send_email_on_error:
                 log.warning(
-                        f"{maximum_errors} has occurred while sending adjustment for: {result.stock_code}. Sending email alert..."
+                        f"{maximum_errors} errors have occurred while sending adjustment for: {result.stock_code}. Sending email alert..."
                         )
                 send_email(result.stock_code, result.error)
                 send_email_on_error = False

@@ -51,34 +51,34 @@ def update_sage_stock(
             json=payload
         )
     except ConnectTimeout:
-        log.error("Connection timeout connecting to HyperSage")
+        log.warn("Connection timeout connecting to HyperSage")
         return "Timed out connecting to HyperSage"
     except TimeoutError:
-        log.error("Connection timeout connecting to HyperSage")
+        log.warn("Connection timeout connecting to HyperSage")
         return "Timed out communicating with HyperSage"
     except Exception as e:
-        log.error(f"Error communicating with HyperSage: {e}")
+        log.warn(f"Error communicating with HyperSage: {e}")
         return f"Error communicating with HyperSage: {e}"
 
     if r.status_code != 200:
         if adj_type == AdjustmentType.adj_out:
             err = f"Cannot add an adjustment out to Sage, error status is {r.status_code}"
-            log.error(err)
+            log.warn(err)
             raise SageException(err + ". The product quantity on Sage may be incorrect")
         err = f"Cannot add an adjustment in to Sage, error status is {r.status_code}"
-        log.error(err)
+        log.warn(err)
         raise SageException(err)
 
     try:
         i = r.json()
     except Exception as e:
-        log.error(f"HyperSage did not return a valid json response: {e}")
+        log.warn(f"HyperSage did not return a valid json response: {e}")
         raise SageException(f"HyperSage did not return a valid json response: {e}")
 
     try:
         response = HypersageResponse(**i)
     except ValidationError as e:
-        log.error(f"Validation of Sage response failed: {e}")
+        log.warn(f"Validation of Sage response failed: {e}")
         raise SageException(f"Validation of Sage response failed: {e}")
 
     if response.success is False:

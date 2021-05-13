@@ -10,12 +10,12 @@ api_key = "hwytrwqvf262vsz9"
 timeout = 45
 
 [adjustments]
-adjustments_uri = "/api/stock"
+adjustments_uri = "/api/stock1"
 
 [email]
 maximum_errors = 3
 sender_email = "info@lewisandwood.co.uk"
-receiver_email = "djs1602@gmail.com"
+receiver_email = "paul.soule@gmail.com"
 subject = "StockSys Alert"
 postmarker_token = "f8049f6f-dec7-49b0-bf1f-cc10119cd916"
 
