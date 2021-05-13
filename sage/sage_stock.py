@@ -70,6 +70,7 @@ def update_sage_stock(
         raise SageException(err)
 
     try:
+        r.encoding = 'utf-8-sig'
         i = r.json()
     except Exception as e:
         log.warn(f"HyperSage did not return a valid json response: {e}")

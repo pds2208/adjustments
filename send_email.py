@@ -20,7 +20,7 @@ def send_email(stock_code, error: str):
             <br>
             <p><b>Error threshold exceeded while adding an adjustment to Sage</b><br>
             <br>
-               While updating the following product: {stock_code}, {max_errors} consecutive errors have occured<br>
+               While updating the following product: {stock_code}, {max_errors} consecutive errors have occurred<br>
                <br>
                The last error received from Sage was:<br><br>
                 <i>{error}</i>

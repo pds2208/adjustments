@@ -56,6 +56,7 @@ def _call_sage(endpoint: str, payload: dict) -> Optional[float]:
         raise SageException(f"Sage returned an error status of: ({r.status_code}) {r.reason}")
 
     try:
+        r.encoding = 'utf-8-sig'
         j = r.json()
     except Exception as e:
         log.error(f"Sage did not return a valid json response: {e}")

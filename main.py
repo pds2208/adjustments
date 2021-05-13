@@ -1,4 +1,5 @@
 import time
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
@@ -13,15 +14,11 @@ from util.configuration import get_cost_price, maximum_errors, sleep
 from util.logging import log
 
 
+@dataclass
 class Result:
-    stock_code: str
-    error: str
-    sage_failed: bool
-
-    def __init__(self, sage_failed: bool = False, error: Optional[str] = None, stock_code: Optional[str] = None):
-        self.sage_failed = sage_failed
-        self.error = error
-        self.stock_code = stock_code
+    sage_failed: bool = False
+    stock_code: str = None
+    error: str = None
 
 
 def update_sage() -> Result:
@@ -48,18 +45,18 @@ def update_sage() -> Result:
                 else:
                     log.info(f"Cost price for {adj.stock_code} is {cost}")
             except SageException as e:
-                return Result(True, e.message, adj.stock_code)
+                return Result(sage_failed=True, stock_code=adj.stock_code, error=e.message)
         else:
             cost = None
 
         try:
-            result: Optional[str] = update_sage_stock(
-                    adj_type=1 if adj.adjustment_type.name == AdjustmentType.adj_in.name else 2,
-                    quantity=adj.amount,
-                    stock_code=adj.stock_code,
-                    reference=adj.reference_text,
-                    cost=cost
-                    )
+            r: Optional[str] = update_sage_stock(
+                adj_type=1 if adj.adjustment_type.name == AdjustmentType.adj_in.name else 2,
+                quantity=adj.amount,
+                stock_code=adj.stock_code,
+                reference=adj.reference_text,
+                cost=cost
+            )
         except Exception as e:
             result = str(e)
 
@@ -77,7 +74,7 @@ def update_sage() -> Result:
         session.add(adj)
         session.add(sage_stats)
         log.warning(f"Update Sage record for product {adj.stock_code} FAILED, {result}")
-        return Result(True, result, adj.stock_code)
+        return Result(sage_failed=True, stock_code=adj.stock_code, error=result)
 
 
 if __name__ == "__main__":
@@ -85,14 +82,14 @@ if __name__ == "__main__":
     send_email_on_error = True
 
     while True:
-        result: Result = update_sage()
-        if result.sage_failed:
+        res: Result = update_sage()
+        if res.sage_failed:
             num_errors = num_errors + 1
             if num_errors > maximum_errors and send_email_on_error:
                 log.warning(
-                        f"{maximum_errors} errors have occurred while sending adjustment for: {result.stock_code}. Sending email alert..."
-                        )
-                send_email(result.stock_code, result.error)
+                    f"{maximum_errors} errors have occurred. Sending email alert..."
+                )
+                send_email(res.stock_code, res.error)
                 send_email_on_error = False
         else:
             num_errors = 0
