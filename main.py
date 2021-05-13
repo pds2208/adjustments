@@ -9,7 +9,7 @@ from sage import SageException
 from sage.cost_price import get_sage_cost_price
 from sage.sage_stock import update_sage_stock
 from send_email import send_email
-from util.configuration import get_cost_price, maximum_errors
+from util.configuration import get_cost_price, maximum_errors, sleep
 from util.logging import log
 
 
