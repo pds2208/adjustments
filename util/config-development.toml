@@ -10,7 +10,7 @@ api_key = "hwytrwqvf262vsz9"
 timeout = 45
 
 [adjustments]
-adjustments_uri = "/api/stock1"
+adjustments_uri = "/api/stock"
 
 [email]
 maximum_errors = 3
