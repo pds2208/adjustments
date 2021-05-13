@@ -50,7 +50,7 @@ def update_sage() -> Result:
             cost = None
 
         try:
-            r: Optional[str] = update_sage_stock(
+            result: Optional[str] = update_sage_stock(
                 adj_type=1 if adj.adjustment_type.name == AdjustmentType.adj_in.name else 2,
                 quantity=adj.amount,
                 stock_code=adj.stock_code,
