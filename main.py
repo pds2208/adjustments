@@ -32,7 +32,7 @@ def update_sage() -> Result:
         adj = get_sage_adjustment(session)
 
         if adj is None:
-            log.info("No adjustment(s) to process")
+            # log.info("No adjustment(s) to process")
             return Result()
 
         log.info(f"Processing adjustment: {adj.stock_code}")
