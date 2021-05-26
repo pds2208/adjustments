@@ -2,12 +2,12 @@
 
 timeout = 720
 database_uri = "mysql+pymysql://lw:lw@localhost/stock"
-sleep = 90
+sleep = 5
 
 [hyper_sage]
-uri = "https://hyperdrive.hyperext.com:27013"
-api_key = "hwytrwqvf262vsz9"
-timeout = 45
+uri = "https://law.hypersage.co.uk:40027"
+api_key = "ngEXJVHb4mHYvr2tuNTsjBNz"
+timeout = 15
 
 [adjustments]
 adjustments_uri = "/api/stock"
