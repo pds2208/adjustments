@@ -7,7 +7,7 @@ sleep = 5
 [hyper_sage]
 uri = "https://law.hypersage.co.uk:50027"
 api_key = "6tHPFEHaqk6xh7HAtXMpCww7"
-timeout = 20
+timeout = 30
 
 [adjustments]
 adjustments_uri = "/api/stock"
