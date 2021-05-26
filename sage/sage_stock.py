@@ -48,7 +48,8 @@ def update_sage_stock(
             endpoint,
             headers={"AuthToken": hyper_api_key},
             timeout=hyper_timeout,
-            json=payload
+            json=payload,
+            verify=False,
         )
     except ConnectTimeout:
         log.warn("Connection timeout connecting to HyperSage")
