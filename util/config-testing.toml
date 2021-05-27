@@ -5,7 +5,7 @@ database_uri = "mysql+pymysql://lw:lw@lw-db/stock"
 sleep = 5
 
 [hyper_sage]
-uri = "https://law.hypersage.co.uk:40027"
+uri = "https://157.231.105.106:40027"
 api_key = "ngEXJVHb4mHYvr2tuNTsjBNz"
 timeout = 30
 

@@ -39,6 +39,7 @@ def _call_sage(endpoint: str, payload: dict) -> Optional[float]:
             auth=(sage_user, sage_password),
             params=payload,
             timeout=sage_timeout,
+            verify=False,
         )
     except ConnectTimeout:
         log.error("Connection timeout connecting to Sage")
