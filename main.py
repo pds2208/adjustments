@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
+import urllib3
+
 from persistence import session_scope
 from persistence.adjustments import get_sage_adjustment, get_sage_stats
 from persistence.models import AdjustmentType
@@ -80,6 +82,8 @@ def update_sage() -> Result:
 if __name__ == "__main__":
     num_errors = 0
     send_email_on_error = True
+
+    urllib3.disable_warnings()
 
     while True:
         res: Result = update_sage()
