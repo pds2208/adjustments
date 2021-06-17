@@ -25,7 +25,7 @@ def update_sage_stock(
         quantity: Decimal,
         stock_code: str,
         reference: str,
-        details: str,
+        batch_no: str,
         cost: Optional[float]
 ) -> Optional[str]:
     now = datetime.today()
@@ -35,7 +35,7 @@ def update_sage_stock(
         "type": adj_type,
         "date": now.strftime("%d/%m/%Y"),
         "reference": reference,
-        "details": details,
+        "details": batch_no,
     }
 
     if cost is not None:

@@ -23,6 +23,20 @@ class Result:
     error: str = None
 
 
+def get_reference(ref: str) -> str:
+    if ref == "CFA":
+        return "C"
+    if ref == "Cutting":
+        return "C"
+    if ref == "Measurement":
+        return "M"
+    if ref == "Sampling":
+        return "S"
+    if ref == "Adjustments":
+        return "ADJ"
+    return ref
+
+
 def update_sage() -> Result:
     with session_scope() as session:
         sage_stats = get_sage_stats(session)
@@ -56,8 +70,8 @@ def update_sage() -> Result:
                 adj_type=1 if adj.adjustment_type.name == AdjustmentType.adj_in.name else 2,
                 quantity=adj.amount,
                 stock_code=adj.stock_code,
-                reference=adj.reference_text,
-                details=adj.details,
+                reference=get_reference(adj.reference_text),
+                batch_no=adj.batch_no,
                 cost=cost
             )
         except Exception as e:
