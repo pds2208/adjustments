@@ -31,7 +31,7 @@ class Adjustments(Base):
     amount: Decimal = Column(DECIMAL(8, 2))
     stock_code = Column(String(64), nullable=False)
     reference_text = Column(String(64))
-    batch_no = Column(String(64))
+    batch = Column(String(64))
     sage_updated = Column(TINYINT(1), nullable=False)
     inserted_at = Column(TIMESTAMP)
     sage_updated_at = Column(TIMESTAMP)

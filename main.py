@@ -71,7 +71,7 @@ def update_sage() -> Result:
                 quantity=adj.amount,
                 stock_code=adj.stock_code,
                 reference=get_reference(adj.reference_text),
-                batch_no=adj.batch_no,
+                batch=adj.batch,
                 cost=cost
             )
         except Exception as e:
