@@ -49,7 +49,7 @@ maximum_errors = config["email"]["maximum_errors"]
 sender_email = config["email"]["sender_email"]
 receiver_email = config["email"]["receiver_email"]
 subject = config["email"]["subject"]
-postmarker_token= config["email"]["postmarker_token"]
+postmarker_token = config["email"]["postmarker_token"]
 
 sage_stock_uri = config["sage"]["stock_uri"]
 sage_stock_levels = config["sage"]["stock_levels"]

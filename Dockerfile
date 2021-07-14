@@ -2,6 +2,7 @@ FROM python:3.9.1-slim-buster
 
 COPY . /lw
 WORKDIR /lw
+RUN chmod +x wait-for-it.sh
 
 ENV DATABASE_URL=${DATABASE_URL}
 ENV PYTHONPATH "${PYTHONPATH}:/lw/lewisandwood"
@@ -11,4 +12,4 @@ ENV RUNTIME=None
 
 RUN pip --trusted-host pypi.python.org --trusted-host pypi.org --trusted-host files.pythonhosted.org install -r requirements.txt
 
-CMD [ "python", "./main.py" ]
+CMD ["./wait-for-it.sh", "lw-db:3306", "--", "python", "./main.py"]

@@ -99,6 +99,7 @@ if __name__ == "__main__":
     send_email_on_error = True
 
     urllib3.disable_warnings()
+    time.sleep(15)
 
     while True:
         res: Result = update_sage()
