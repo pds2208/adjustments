@@ -1,19 +1,9 @@
 import enum
+from datetime import datetime
 from decimal import Decimal
+from typing import Optional
 
-import sqlalchemy
-from sqlalchemy import (
-    Column,
-    DECIMAL,
-    Integer,
-    String,
-    TIMESTAMP,
-)
-from sqlalchemy.dialects.mysql import TINYINT
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
-metadata = Base.metadata
+from sqlmodel import Field, SQLModel
 
 
 class AdjustmentType(enum.Enum):
@@ -21,28 +11,25 @@ class AdjustmentType(enum.Enum):
     adj_out = "adj_out"
 
 
-class Adjustments(Base):
-    __tablename__ = "adjustments"
-
-    id = Column(Integer, primary_key=True)
-    adjustment_type = Column(
-        sqlalchemy.Enum(AdjustmentType), name="adjustment_type", nullable=False
-    )
-    amount: Decimal = Column(DECIMAL(8, 2))
-    stock_code = Column(String(64), nullable=False)
-    reference_text = Column(String(64))
-    sage_updated = Column(TINYINT(1), nullable=False)
-    inserted_at = Column(TIMESTAMP)
-    sage_updated_at = Column(TIMESTAMP)
-    num_retries = Column(Integer)
-    updates_paused = Column(TINYINT(1))
-    paused_time = Column(TIMESTAMP)
+SQLModel.metadata.schema = "stock"
 
 
-class SageStats(Base):
-    __tablename__ = "sage_stats"
+class Adjustments(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    adjustment_type: AdjustmentType
+    amount: Decimal
+    stock_code: str
+    reference_text: str
+    sage_updated: bool
+    inserted_at: datetime
+    sage_updated_at: datetime
+    num_retries: int
+    updates_paused: bool
+    paused_time: datetime
 
-    id = Column(Integer, primary_key=True)
-    total_updated = Column(Integer)
-    total_failures = Column(Integer)
-    paused = Column(Integer)
+
+class SageStats(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    total_updated: int
+    total_failures: int
+    paused: bool

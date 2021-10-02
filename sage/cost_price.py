@@ -54,7 +54,6 @@ def _call_sage(endpoint: str, payload: dict) -> Optional[float]:
     log.debug(f"Sage returned a status of {r.status_code}")
     if r.status_code != 200:
         log.error(f"Sage returned an error status of: ({r.status_code}) {r.reason}")
-        raise SageException(f"Sage returned an error status of: ({r.status_code}) {r.reason}")
 
     try:
         r.encoding = 'utf-8-sig'
