@@ -24,6 +24,7 @@ def update_sage_stock(
         adj_type: int,
         quantity: Decimal,
         stock_code: str,
+        adjustment_date: datetime,
         reference: str,
         cost: Optional[float]
 ) -> Optional[str]:
@@ -32,7 +33,7 @@ def update_sage_stock(
         "stockCode": stock_code,
         "quantity": float(quantity),
         "type": adj_type,
-        "date": now.strftime("%d/%m/%Y"),
+        "date": now.strftime("%d/%m/%Y") if adjustment_date is None else adjustment_date.strftime("%d/%m/%Y"),
         "reference": "Winegum Stock Adjustment",
         "details": reference.strip(),
     }

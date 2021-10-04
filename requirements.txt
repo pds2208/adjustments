@@ -1,11 +1,8 @@
-pydantic==1.8.2
-SQLAlchemy==1.4.25
-sqlalchemy2-stubs==0.0.2a17
-sqlmodel==0.0.4
-typing-extensions==3.10.0.2
-
+pydantic~=1.8.2
+SQLAlchemy~=1.4.25
+sqlalchemy2-stubs~=0.0.2a17
+sqlmodel~=0.0.4
+typing-extensions~=3.10.0.2
 urllib3~=1.26.7
-
 requests~=2.26.0
-
 postmarker~=0.18.2

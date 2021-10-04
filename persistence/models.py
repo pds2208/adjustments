@@ -19,6 +19,7 @@ class Adjustments(SQLModel, table=True):
     adjustment_type: AdjustmentType
     amount: Decimal
     stock_code: str
+    adjustment_date: datetime
     reference_text: str
     sage_updated: bool
     inserted_at: datetime
