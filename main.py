@@ -70,6 +70,7 @@ def update_sage() -> Result:
                 adj_type=1 if adj.adjustment_type.name == AdjustmentType.adj_in.name else 2,
                 quantity=adj.amount,
                 stock_code=adj.stock_code,
+                adjustment_date=adj.adjustment_date,
                 reference=get_reference(adj.reference_text),
                 batch=adj.batch,
                 cost=cost
