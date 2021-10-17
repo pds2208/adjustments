@@ -7,7 +7,7 @@ from sqlalchemy import (
     DECIMAL,
     Integer,
     String,
-    TIMESTAMP,
+    TIMESTAMP, Date,
 )
 from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.ext.declarative import declarative_base
@@ -30,7 +30,7 @@ class Adjustments(Base):
     )
     amount: Decimal = Column(DECIMAL(8, 2))
     stock_code = Column(String(64), nullable=False)
-    adjustment_date: Column(date)
+    adjustment_date: Date = Column(Date)
     reference_text = Column(String(64))
     batch = Column(String(20))
     sage_updated = Column(TINYINT(1), nullable=False)
