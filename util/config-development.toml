@@ -11,6 +11,7 @@ timeout = 30
 
 [adjustments]
 adjustments_uri = "/api/stock"
+pause_time = 15
 
 [email]
 maximum_errors = 3
